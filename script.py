@@ -14,6 +14,10 @@ for line in lines:
 	name="-".join(name)
 	name=name.split(":")[0].strip()
 
+	time1=line.split(",")[1:]
+	time1=",".join(time1)
+	time1=time1.split("-")[0].strip()
+
 	word=line.split(":")[2:]
 	word=":".join(word).strip()
 	clas=""
@@ -21,4 +25,5 @@ for line in lines:
 		clas="b"
 	else:
 		clas="c"
-	print "<li class=\"" + clas + "\"><span class=\"" + clas + "\">" + word + "</span></li>"
+	t="time"
+	print '<li class=%s><span class=%s>%s<span class=%s>%s</span></span></li>' %(clas,clas,word,t,time1)
