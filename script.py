@@ -19,6 +19,12 @@ li.b {
 	text-align:right;
 }
 
+.date {
+	border: 1px solid black;
+	padding: 3px;
+	text-align: center;
+}
+
 li.c {
 	text-align:left;
 	/*margin-left:0;*/
@@ -63,6 +69,7 @@ span.b{
 </body>
 </html>
 """
+date=""
 lis = ""
 img=""
 lines=a.split("\n")
@@ -70,12 +77,38 @@ line1=lines[0]
 name1=line1.split("-")[1:]
 name1="-".join(name1)
 name1=name1.split(":")[0].strip()
+
+msg=""
+time1=""
+word=""
+img=""
+
+
 for line in lines:
 	#print line
+	x=line.split("-")[0]
+	try:
+		x=x.split(",")[1].strip()
+		if x[-2:]!="AM" and x[-2:]!="PM":
+			msg=msg+ "<br/>" + line
+			continue
+	except IndexError:
+		msg=msg+ "<br/>" + line
+		continue
+	if msg != "":
+		print msg
+
+	
 	imgtag=""
 	name=line.split("-")[1:]
 	name="-".join(name)
 	name=name.split(":")[0].strip()
+
+	date1=line.split(",")[0]
+	if (date1!=date):
+		date=date1	
+		word=line.split(":")[2:]
+		lis += '<li class="date"><span>%s</span></li>' % (date)
 
 	time1=line.split(",")[1:]
 	time1=",".join(time1)
@@ -85,7 +118,12 @@ for line in lines:
 	img=word.split(" ")[0]
 	
 	if img[0:3]=='IMG' and img[-4:]=='.jpg':
-		imgtag='<img src='+os.path.join(sys.argv[1],img)+'>'
+		imgtag='<img src='+os.path.join(sys.argv[1],img)+' width="200px">'
+		imgtag ="<a target='_blank' href=" + os.path.join(sys.argv[1],img) + ">%s</a>" % imgtag
+	if img[0:3]=='VID' and img[-4:]=='.mp4':
+		imgtag='<video width="320" height="240" controls> \
+  						<source src='+os.path.join(sys.argv[1],img)+' type="video/mp4"> \
+ 				</video>'
 
 	clas=""
 	if (name==name1):
@@ -93,11 +131,13 @@ for line in lines:
 	else:
 		clas="c"
 	t="time"
-	if (imgtag==""):
+	if msg:
+		lis += '<li class=%s><span class=%s>%s<span class=%s>%s</span></span></li>' %(clas,clas,msg,t,time1)
+	msg=""
 
+	if (imgtag==""):
 		lis += '<li class=%s><span class=%s>%s<span class=%s>%s</span></span></li>' %(clas,clas,word,t,time1)
 	else:
-
 		lis += '<li class=%s><span class=%s>%s<span class=%s>%s</span></span></li>' %(clas,clas,imgtag,t,time1)
 output = template % lis
 fp = open("output.html", "w")
