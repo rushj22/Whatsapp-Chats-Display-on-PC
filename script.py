@@ -1,6 +1,6 @@
-import webbrowser,os,sys
+import sys,webbrowser,os
 
-d = sys.argv[1]
+d=sys.argv[1]
 
 #storing chat file location in a variable
 for file in os.listdir(sys.argv[1]):
@@ -8,15 +8,19 @@ for file in os.listdir(sys.argv[1]):
 		d=os.path.join(d,file)
 
 #file reading
+
 fp=open(d,"r")
 a=fp.read()
 
 name1=""
-template = """
-<html>
+
+template='''<html>
+
 <head>
-<title>Your whatsapp chat</title>
+<title>Whatsapp Chats Display on PC</title>
+</head>
 <style>
+
 li.b {
 	text-align:right;
 }
@@ -43,34 +47,17 @@ span.c {
 	padding:5px;
 
 	border-color:white;
-	
+}	
 
-	
-}
-
-span.time{
-		font-size:10px;
-		margin-left:6px;
-}
-span.b{
-
-	border:1px solid;
-	
-	border-radius:6px;
-	padding:5px;
-	border-color:rgb(214,248,183);
-	box-shadow: 0 0 2px;
-	background-color: rgb(214,248,183);
-}
 </style>
-</head>
 <body>
-<ul style="list-style-type:none">
+<ul>
 %s
 </ul>
 </body>
+<<<<<<< HEAD
 </html>
-"""
+'''
 date=""
 lis = ""
 img=""
@@ -83,7 +70,9 @@ name1=line1.split("-")[1:]
 name1="-".join(name1)
 name1=name1.split(":")[0].strip()
 
+date1=""
 msg=""
+
 time1=""
 word=""
 img=""
@@ -103,9 +92,21 @@ for line in lines:
 		continue
 		
 	imgtag=""
+
+	#extracting message
+	word=line.split(":")[2:]
+	word=":".join(word).strip()
+
+	#extracting name of person
 	name=line.split("-")[1:]
 	name="-".join(name)
 	name=name.split(":")[0].strip()
+	
+	#class allotment for css
+	if (name==name1):
+		clas="a"
+	else:
+		clas="b"
 
 	#extracting date of message and checking if date is new
 	date1=line.split(",")[0]
@@ -119,10 +120,6 @@ for line in lines:
 	time1=",".join(time1)
 	time1=time1.split("-")[0].strip()
 
-	#extracting message
-	word=line.split(":")[2:]
-	word=":".join(word).strip()
-
 	#checking for image or video as message
 	img=word.split(" ")[0]
 	
@@ -132,16 +129,8 @@ for line in lines:
 	
 	if img[0:3]=='VID' and img[-4:]=='.mp4':
 		imgtag='<video width="320" height="240" controls> \
-  						<source src='+os.path.join(sys.argv[1],img)+' type="video/mp4"> \
- 				</video>'
-
- 	#class allotment for css	
-	clas=""
-	if (name==name1):
-		clas="b"
-	else:
-		clas="c"
-
+  				<source src='+os.path.join(sys.argv[1],img)+' type="video/mp4">\
+  			</video>'
 	#adding message to list depending on what type of message is it
 
 	t="time"
